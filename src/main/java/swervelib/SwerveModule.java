@@ -45,15 +45,17 @@ public class SwerveModule {
   private final String rawAngleName;
   /** NT3 Raw drive motor. */
   private final String rawDriveName;
+  /** NT3 Raw drive motor. */
+  private final String rawDriveVelName;
   /**
    * Module number for kinematics, usually 0 to 3. front left -> front right -> back left -> back
    * right.
    */
   public int moduleNumber;
-  /** Feedforward for the drive motor during closed loop control. */
-  private SimpleMotorFeedforward driveMotorFeedforward;
   /** Maximum speed of the drive motors in meters per second. */
   public double maxSpeed;
+  /** Feedforward for the drive motor during closed loop control. */
+  private SimpleMotorFeedforward driveMotorFeedforward;
   /** Anti-Jitter AKA auto-centering disabled. */
   private boolean antiJitterEnabled = true;
   /** Last swerve module state applied. */
@@ -159,11 +161,13 @@ public class SwerveModule {
             "Pushing the Absolute Encoder offset to the encoder failed on module #" + moduleNumber,
             Alert.AlertType.WARNING);
 
-    rawAbsoluteAngleName = "Module[" + configuration.name + "] Raw Absolute Encoder";
-    adjAbsoluteAngleName = "Module[" + configuration.name + "] Adjusted Absolute Encoder";
-    absoluteEncoderIssueName = "Module[" + configuration.name + "] Absolute Encoder Read Issue";
-    rawAngleName = "Module[" + configuration.name + "] Raw Angle Encoder";
-    rawDriveName = "Module[" + configuration.name + "] Raw Drive Encoder";
+    rawAbsoluteAngleName = "swerve/modules/" + configuration.name + "/Raw Absolute Encoder";
+    adjAbsoluteAngleName = "swerve/modules/" + configuration.name + "/Adjusted Absolute Encoder";
+    absoluteEncoderIssueName =
+        "swerve/modules/" + configuration.name + "/Absolute Encoder Read Issue";
+    rawAngleName = "swerve/modules/" + configuration.name + "/Raw Angle Encoder";
+    rawDriveName = "swerve/modules/" + configuration.name + "/Raw Drive Encoder";
+    rawDriveVelName = "swerve/modules/" + configuration.name + "/Raw Drive Velocity";
   }
 
   /**
@@ -200,7 +204,7 @@ public class SwerveModule {
   public void setAntiJitter(boolean antiJitter) {
     this.antiJitterEnabled = antiJitter;
     if (antiJitter) {
-      pushOffsetsToControllers();
+      pushOffsetsToEncoders();
     } else {
       restoreInternalOffset();
     }
@@ -216,6 +220,15 @@ public class SwerveModule {
   }
 
   /**
+   * Get the current drive motor PIDF values.
+   *
+   * @return {@link PIDFConfig} of the drive motor.
+   */
+  public PIDFConfig getDrivePIDF() {
+    return configuration.velocityPIDF;
+  }
+
+  /**
    * Set the drive PIDF values.
    *
    * @param config {@link PIDFConfig} of that should be set.
@@ -226,12 +239,12 @@ public class SwerveModule {
   }
 
   /**
-   * Get the current drive motor PIDF values.
+   * Get the current angle/azimuth/steering motor PIDF values.
    *
-   * @return {@link PIDFConfig} of the drive motor.
+   * @return {@link PIDFConfig} of the angle motor.
    */
-  public PIDFConfig getDrivePIDF() {
-    return configuration.velocityPIDF;
+  public PIDFConfig getAnglePIDF() {
+    return configuration.anglePIDF;
   }
 
   /**
@@ -242,15 +255,6 @@ public class SwerveModule {
   public void setAnglePIDF(PIDFConfig config) {
     configuration.anglePIDF = config;
     angleMotor.configurePIDF(config);
-  }
-
-  /**
-   * Get the current angle/azimuth/steering motor PIDF values.
-   *
-   * @return {@link PIDFConfig} of the angle motor.
-   */
-  public PIDFConfig getAnglePIDF() {
-    return configuration.anglePIDF;
   }
 
   /**
@@ -305,16 +309,18 @@ public class SwerveModule {
       simModule.updateStateAndPosition(desiredState);
     }
 
-    if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.HIGH.ordinal()) {
+    if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.INFO.ordinal()) {
       SwerveDriveTelemetry.desiredStates[moduleNumber * 2] = desiredState.angle.getDegrees();
       SwerveDriveTelemetry.desiredStates[(moduleNumber * 2) + 1] = velocity;
     }
 
     if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH) {
       SmartDashboard.putNumber(
-          "Module[" + configuration.name + "] Speed Setpoint", desiredState.speedMetersPerSecond);
+          "swerve/modules/" + configuration.name + "/Speed Setpoint",
+          desiredState.speedMetersPerSecond);
       SmartDashboard.putNumber(
-          "Module[" + configuration.name + "] Angle Setpoint", desiredState.angle.getDegrees());
+          "swerve/modules/" + configuration.name + "/Angle Setpoint",
+          desiredState.angle.getDegrees());
     }
   }
 
@@ -499,7 +505,7 @@ public class SwerveModule {
    * Push absolute encoder offset in the memory of the encoder or controller. Also removes the
    * internal angle offset.
    */
-  public void pushOffsetsToControllers() {
+  public void pushOffsetsToEncoders() {
     if (absoluteEncoder != null && angleOffset == configuration.angleOffset) {
       if (absoluteEncoder.setAbsoluteEncoderOffset(angleOffset)) {
         angleOffset = 0;
@@ -540,6 +546,7 @@ public class SwerveModule {
     }
     SmartDashboard.putNumber(rawAngleName, angleMotor.getPosition());
     SmartDashboard.putNumber(rawDriveName, driveMotor.getPosition());
+    SmartDashboard.putNumber(rawDriveVelName, driveMotor.getVelocity());
     SmartDashboard.putNumber(adjAbsoluteAngleName, getAbsolutePosition());
     SmartDashboard.putNumber(absoluteEncoderIssueName, getAbsoluteEncoderReadIssue() ? 1 : 0);
   }

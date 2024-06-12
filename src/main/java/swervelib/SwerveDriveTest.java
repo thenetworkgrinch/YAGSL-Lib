@@ -258,11 +258,12 @@ public class SwerveDriveTest {
     double power = powerSupplied.get();
     double distance = module.getPosition().distanceMeters;
     double velocity = module.getDriveMotor().getVelocity();
-    SmartDashboard.putNumber("Module[" + module.configuration.name + "] SysId Drive Power", power);
     SmartDashboard.putNumber(
-        "Module[" + module.configuration.name + "] SysId Drive Position", distance);
+        "swerve/modules/" + module.configuration.name + "/SysId Drive Power", power);
     SmartDashboard.putNumber(
-        "Module[" + module.configuration.name + "] SysId Drive Velocity", velocity);
+        "swerve/modules/" + module.configuration.name + "/SysId Drive Position", distance);
+    SmartDashboard.putNumber(
+        "swerve/modules/" + module.configuration.name + "/SysId Drive Velocity", velocity);
     log.motor("drive-" + module.configuration.name)
         .voltage(m_appliedVoltage.mut_replace(power, Volts))
         .linearPosition(m_distance.mut_replace(distance, Meters))
@@ -334,11 +335,13 @@ public class SwerveDriveTest {
     double power = powerSupplied.get();
     double angle = module.getAbsolutePosition();
     double velocity = module.getAbsoluteEncoder().getVelocity();
-    SmartDashboard.putNumber("Module[" + module.configuration.name + "] SysId Angle Power", power);
     SmartDashboard.putNumber(
-        "Module[" + module.configuration.name + "] SysId Angle Position", angle);
+        "swerve/modules/" + module.configuration.name + "/SysId Angle Power", power);
     SmartDashboard.putNumber(
-        "Module[" + module.configuration.name + "] SysId Absolute Encoder Velocity", velocity);
+        "swerve/modules/" + module.configuration.name + "/SysId Angle Position", angle);
+    SmartDashboard.putNumber(
+        "swerve/modules/" + module.configuration.name + "/SysId Absolute Encoder Velocity",
+        velocity);
     log.motor("angle-" + module.configuration.name)
         .voltage(m_appliedVoltage.mut_replace(power, Volts))
         .angularPosition(m_anglePosition.mut_replace(angle, Degrees))

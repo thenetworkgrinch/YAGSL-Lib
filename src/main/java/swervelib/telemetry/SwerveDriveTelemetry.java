@@ -94,6 +94,10 @@ public class SwerveDriveTelemetry {
     NONE,
     /** Low telemetry data, only post the robot position on the field. */
     LOW,
+    /** Medium telemetry data, swerve directory */
+    INFO,
+    /** Info level + field info */
+    POSE,
     /** Full swerve drive data is sent back in both human and machine readable forms. */
     HIGH,
     /** Only send the machine readable data related to swerve drive. */
