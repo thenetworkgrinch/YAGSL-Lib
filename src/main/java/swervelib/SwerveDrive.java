@@ -511,6 +511,20 @@ public class SwerveDrive {
   }
 
   /**
+   * Gets the current module positions (azimuth and wheel position (meters)).
+   *
+   * @return A list of {@link SwerveModulePosition} containg the current module positions
+   */
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] positions =
+        new SwerveModulePosition[swerveDriveConfiguration.moduleCount];
+    for (SwerveModule module : swerveModules) {
+      positions[module.moduleNumber] = module.getPosition();
+    }
+    return positions;
+  }
+
+  /**
    * Set the module states (azimuth and velocity) directly.
    *
    * @param desiredStates A list of SwerveModuleStates to send to the modules.
@@ -636,20 +650,6 @@ public class SwerveDrive {
       states[module.moduleNumber] = module.getState();
     }
     return states;
-  }
-
-  /**
-   * Gets the current module positions (azimuth and wheel position (meters)).
-   *
-   * @return A list of SwerveModulePositions containg the current module positions
-   */
-  public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions =
-        new SwerveModulePosition[swerveDriveConfiguration.moduleCount];
-    for (SwerveModule module : swerveModules) {
-      positions[module.moduleNumber] = module.getPosition();
-    }
-    return positions;
   }
 
   /**
