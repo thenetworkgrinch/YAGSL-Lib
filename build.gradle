@@ -15,11 +15,11 @@ ext.wpilibVersion = "2024.3.2" // and again here, thanks gradle....
 repositories {
     mavenCentral()
 }
-if (project.hasProperty('releaseMode')) {
+//if (project.hasProperty('releaseMode')) {
     wpilibRepositories.addAllReleaseRepositories(project)
-} else {
-    wpilibRepositories.addAllDevelopmentRepositories(project)
-}
+//} else {
+    //wpilibRepositories.addAllDevelopmentRepositories(project)
+//}
 
 // Apply C++ configuration
 apply from: 'config.gradle'
