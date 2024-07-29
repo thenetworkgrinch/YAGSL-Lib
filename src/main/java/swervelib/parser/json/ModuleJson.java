@@ -9,6 +9,7 @@ import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveModulePhysicalCharacteristics;
 import swervelib.parser.json.modules.BoolMotorJson;
+import swervelib.parser.json.modules.ConversionFactorsJson;
 import swervelib.parser.json.modules.LocationJson;
 
 /** {@link swervelib.SwerveModule} JSON parsed class. Used to access the JSON data. */
@@ -27,6 +28,8 @@ public class ModuleJson {
    * drive motors.
    */
   public MotorConfigDouble conversionFactor = new MotorConfigDouble(0, 0);
+  /** Conversion Factors composition. Auto-calculates the conversion factors. */
+  public ConversionFactorsJson conversionFactors = new ConversionFactorsJson();
   /** Absolute encoder device configuration. */
   public DeviceJson encoder;
   /** Defines which motors are inverted. */
@@ -62,6 +65,27 @@ public class ModuleJson {
       if (absEncoder.getAbsoluteEncoder() instanceof MotorFeedbackSensor) {
         angleMotor.setAbsoluteEncoder(absEncoder);
       }
+    }
+
+    // Setup deprecation notice.
+    //    if (this.conversionFactor.drive != 0 && this.conversionFactor.angle != 0)
+    //    {
+    //      new Alert("Configuration",
+    //                "\n'conversionFactor': {'drive': " + conversionFactor.drive + ", 'angle': " +
+    // conversionFactor.angle +
+    //                "} \nis deprecated, please use\n" +
+    //                "'conversionFactors': {'drive': {'factor': " + conversionFactor.drive + "},
+    // 'angle': {'factor': " +
+    //                conversionFactor.angle + "} }",
+    //                AlertType.WARNING).set(true);
+    //    }
+
+    // Override with composite conversion factor.
+    if (!conversionFactors.isAngleEmpty()) {
+      conversionFactor.angle = conversionFactors.angle.calculate();
+    }
+    if (!conversionFactors.isDriveEmpty()) {
+      conversionFactor.drive = conversionFactors.drive.calculate();
     }
 
     // Set the conversion factors to null if they are both 0.

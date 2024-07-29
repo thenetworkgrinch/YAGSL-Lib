@@ -16,9 +16,9 @@ repositories {
     mavenCentral()
 }
 //if (project.hasProperty('releaseMode')) {
-    wpilibRepositories.addAllReleaseRepositories(project)
+wpilibRepositories.addAllReleaseRepositories(project)
 //} else {
-    //wpilibRepositories.addAllDevelopmentRepositories(project)
+//wpilibRepositories.addAllDevelopmentRepositories(project)
 //}
 
 // Apply C++ configuration
