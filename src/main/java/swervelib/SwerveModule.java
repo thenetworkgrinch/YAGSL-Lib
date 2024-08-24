@@ -532,6 +532,7 @@ public class SwerveModule {
    * value.
    */
   public void restoreInternalOffset() {
+    angleMotor.setAbsoluteEncoder(null);
     absoluteEncoder.setAbsoluteEncoderOffset(0);
     angleOffset = configuration.angleOffset;
   }
