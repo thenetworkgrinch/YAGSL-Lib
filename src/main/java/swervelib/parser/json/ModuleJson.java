@@ -1,5 +1,7 @@
 package swervelib.parser.json;
 
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.util.Units;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.motors.SwerveMotor;
@@ -113,6 +115,14 @@ public class ModuleJson {
     if (this.conversionFactor.drive == 0 || this.conversionFactor.angle == 0) {
       throw new RuntimeException(
           "Conversion factors cannot be 0, please configure conversion factors in physicalproperties.json or the module JSON files.");
+    }
+
+    // Backwards compatibility, auto-optimization.
+    if (conversionFactor.angle == 360
+        && absEncoder != null
+        && absEncoder.getAbsoluteEncoder() instanceof AbsoluteEncoder
+        && angleMotor.getMotor() instanceof CANSparkMax) {
+      angleMotor.setAbsoluteEncoder(absEncoder);
     }
 
     return new SwerveModuleConfiguration(

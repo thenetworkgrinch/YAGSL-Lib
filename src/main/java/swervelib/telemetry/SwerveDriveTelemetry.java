@@ -34,7 +34,7 @@ public class SwerveDriveTelemetry {
   public static boolean isSimulation = RobotBase.isSimulation();
   /** The number of swerve modules */
   public static int moduleCount;
-  /** The number of swerve modules */
+  /** The Locations of the swerve drive wheels. */
   public static double[] wheelLocations;
   /**
    * An array of rotation and velocity values describing the measured state of each swerve module
