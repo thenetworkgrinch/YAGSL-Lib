@@ -54,7 +54,7 @@ nativeUtils {
 }
 
 javadoc {
-    destinationDir = file("yagsl/javadocs")
+    destinationDir = file("docs")
     options {
         links 'https://docs.oracle.com/en/java/javase/17/docs/api/', 'https://github.wpilib.org/allwpilib/docs/release/java/'
     }
