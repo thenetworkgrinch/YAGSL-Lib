@@ -60,6 +60,9 @@ javadoc {
     }
 }
 
+spotlessCpp.dependsOn javadoc
+spotlessJava.dependsOn javadoc
+
 model {
     components {
         YAGSL(NativeLibrarySpec) {
