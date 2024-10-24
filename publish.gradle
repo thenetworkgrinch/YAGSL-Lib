@@ -110,6 +110,23 @@ task outputJavadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+// Apply template variables from the vendordep file.
+// Replaces ${VARIABLE} with VARIABLE: value in expand()
+task vendordepJson() {
+    description = 'Builds the vendordep json file.'
+    group = 'Build'
+    outputs.file("yagsl/yagsl.json")
+
+    copy {
+        from "yagsl.json"
+        into "yagsl/"
+        expand(version: pubVersion,
+                groupId: artifactGroupId,
+                artifactId: baseArtifactId)
+    }
+}
+
+
 artifacts {
     archives sourcesJar
     archives javadocJar
@@ -128,7 +145,7 @@ build.dependsOn outputJar
 
 libraryBuild.dependsOn build
 
-def releasesRepoUrl = "$buildDir/repos/releases"
+def releasesRepoUrl = "yagsl/repos/releases"
 
 publishing {
     repositories {
