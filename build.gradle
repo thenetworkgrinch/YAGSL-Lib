@@ -136,6 +136,8 @@ spotlessCpp.dependsOn javadoc
 spotlessJava.dependsOn javadoc
 spotlessGroovyGradle.dependsOn javadoc
 
+build.dependsOn spotlessApply
+
 apply from: 'publish.gradle'
 
 wrapper {
