@@ -135,6 +135,7 @@ spotless {
 spotlessCpp.dependsOn javadoc
 spotlessJava.dependsOn javadoc
 spotlessGroovyGradle.dependsOn javadoc
+spotlessMisc.dependsOn javadoc
 
 build.dependsOn spotlessApply
 
