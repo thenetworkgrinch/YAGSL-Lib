@@ -24,8 +24,8 @@ jobs:
           gh repo clone BroncBotz3481/YAGSL-Example -- -b dev
       - name: Copy source over
         run: |
-          rm -rf src/main/java/swervelib &&
-          cp -r YAGSL-Example/src/main/java/swervelib src/main/java/ && 
+          rm -rf src/main/java/swervelib
+          cp -r YAGSL-Example/src/main/java/swervelib src/main/java/ 
           rm -rf YAGSL-Example
       - name: Install roboRio toolchain
         run: ./gradlew installRoboRioToolchain
@@ -35,7 +35,8 @@ jobs:
         run: ./gradlew publish
       - name: Update repository
         run: |
-          git add . &&
-          git commit -m "Upgrading to ${{ inputs.releaseVersion}}" &&
+          git config --global user.name "thenetworkgrinch"
+          git config --global user.email "thenetworkgrinch@users.noreply.github.com"
+          git commit -am "Upgrading to ${{ inputs.releaseVersion }}"
           git push
 
