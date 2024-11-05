@@ -2,7 +2,9 @@ apply plugin: 'maven-publish'
 
 ext.licenseFile = files("$rootDir/LICENSE.txt")
 
-def pubVersion = System.getenv("releaseVersion")
+def pubVersion = System.getenv("releaseVersion") ?: "test"
+
+def releasesRepoUrl = "yagsl/repos/"
 
 def outputsFolder = file("$buildDir/outputs")
 
@@ -121,8 +123,8 @@ task vendordepJson() {
         from "yagsl.json"
         into "yagsl/"
         expand(version: pubVersion,
-        groupId: artifactGroupId,
-        artifactId: baseArtifactId)
+                groupId: artifactGroupId,
+                artifactId: baseArtifactId)
     }
 }
 
@@ -145,7 +147,6 @@ build.dependsOn outputJar
 
 libraryBuild.dependsOn build
 
-def releasesRepoUrl = "yagsl/repos/"
 
 publishing {
     repositories {
