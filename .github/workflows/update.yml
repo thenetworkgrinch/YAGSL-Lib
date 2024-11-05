@@ -33,11 +33,12 @@ jobs:
       - name: Build vendordep
         run: ./gradlew build
       - name: Publish vendordep
-        run: ./update.sh
+        run: ./gradlew publish
       - name: Update repository
         run: |
           git config --global user.name "thenetworkgrinch"
           git config --global user.email "thenetworkgrinch@users.noreply.github.com"
-          git commit -am "Upgrading to ${{ inputs.releaseVersion }}"
+          git add .
+          git commit -m "Upgrading to ${{ inputs.releaseVersion }}"
           git push
 
