@@ -1,0 +1,37 @@
+name: Build and Publish YAGSL vendordep
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: "Release version number"
+        type: string
+        required: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    container: wpilib/roborio-cross-ubuntu:2024-22.04
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Clone dev branch
+        run: |
+          gh repo clone BroncBotz3481/YAGSL-Example -- -b dev
+      - name: Copy source over
+        run: |
+          rm -rf src/main/java/swervelib &&
+          cp -r YAGSL-Example/src/main/java/swervelib src/main/java/ && 
+          rm -rf YAGSL-Example
+      - name: Install roboRio toolchain
+        run: ./gradlew installRoboRioToolchain
+      - name: Build vendordep
+        run: ./gradlew build
+      - name: Publish vendordep
+        run: ./gradlew publish
+      - name: Update repository
+        run: |
+          git add . &&
+          git commit -m "Upgrading to ${{ inputs.releaseVersion}}" &&
+          git push
+
