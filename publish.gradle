@@ -145,7 +145,7 @@ build.dependsOn outputJar
 
 libraryBuild.dependsOn build
 
-def releasesRepoUrl = "yagsl/repos/releases"
+def releasesRepoUrl = "yagsl/repos/"
 
 publishing {
     repositories {
