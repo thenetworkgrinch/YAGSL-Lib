@@ -123,8 +123,8 @@ task vendordepJson() {
         from "yagsl.json"
         into "yagsl/"
         expand(version: pubVersion,
-        groupId: artifactGroupId,
-        artifactId: baseArtifactId)
+                groupId: artifactGroupId,
+                artifactId: baseArtifactId)
     }
 }
 
@@ -156,12 +156,6 @@ publishing {
         }
     }
 }
-
-task cleanReleaseRepo(type: Delete) {
-    delete releasesRepoUrl
-}
-
-tasks.matching {it != cleanReleaseRepo}.all {it.dependsOn cleanReleaseRepo}
 
 model {
     publishing {
