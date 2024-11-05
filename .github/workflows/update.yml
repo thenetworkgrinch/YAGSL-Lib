@@ -12,12 +12,12 @@ jobs:
     container: wpilib/roborio-cross-ubuntu:2024-22.04
     permissions:
       contents: write
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Clone dev branch
         run: |
           gh repo clone BroncBotz3481/YAGSL-Example -- -b dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Copy source over
         run: |
           rm -rf src/main/java/swervelib &&
@@ -34,4 +34,6 @@ jobs:
           git add . &&
           git commit -m "Upgrading to ${{ inputs.releaseVersion}}" &&
           git push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
