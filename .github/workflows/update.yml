@@ -33,7 +33,7 @@ jobs:
       - name: Build vendordep
         run: ./gradlew build
       - name: Publish vendordep
-        run: ./gradlew publish
+        run: ./update.sh
       - name: Update repository
         run: |
           git config --global user.name "thenetworkgrinch"
